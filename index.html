@@ -8,19 +8,33 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap');
 
+        /* CSS Custom Properties untuk konsistensi warna */
+        :root {
+            --color-pink: #ec4899;
+            --color-purple: #a855f7;
+            --color-green: #22c55e;
+            --color-blue: #3b82f6;
+            --color-yellow: #eab308;
+            --shadow-color: rgba(0, 0, 0, 0.15);
+        }
+
         body {
             font-family: 'Nunito', sans-serif;
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            /* Latar belakang pola ceria */
+            background: radial-gradient(circle at 20% 30%, rgba(254, 214, 227, 0.6) 0%, transparent 50%), 
+                        radial-gradient(circle at 80% 70%, rgba(168, 237, 234, 0.6) 0%, transparent 50%),
+                        linear-gradient(135deg, #f0fdfa 0%, #fff1f2 100%);
+            background-attachment: fixed;
             min-height: 100vh;
             min-height: -webkit-fill-available; /* Fix for Safari mobile */
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* Ubah ke flex-start agar konten mulai dari atas */
+            justify-content: flex-start;
             overflow-x: hidden;
             touch-action: manipulation;
             margin: 0;
-            padding: 0; /* Hapus padding body, gunakan padding di dalam kontainer */
+            padding: 0;
         }
 
         html {
@@ -40,9 +54,10 @@
         }
         .bubble {
             position: absolute;
-            background: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.5); /* Sedikit lebih transparan */
             border-radius: 50%;
             animation: floatUp linear infinite;
+            box-shadow: 0 4px 8px var(--shadow-color);
         }
         @keyframes floatUp {
             0% { transform: translateY(100vh) scale(0); opacity: 0; }
@@ -56,20 +71,20 @@
             border-bottom-width: 6px;
         }
         .btn-3d:active {
-            border-bottom-width: 0px;
-            transform: translateY(6px);
+            border-bottom-width: 2px; /* Efek tekan lebih dalam */
+            transform: translateY(4px);
         }
 
         /* View Management */
         .view-section {
             display: none;
             width: 100%;
-            height: 100vh; /* Setinggi layar */
-            height: 100dvh; /* Dynamic viewport height untuk mobile */
-            max-width: 800px; /* Sedikit dilebarkan untuk desktop */
+            height: 100vh;
+            height: 100dvh;
+            max-width: 1000px; /* Sedikit lebih lebar untuk desktop */
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Konten di tengah secara vertikal */
+            justify-content: center;
             z-index: 10;
             padding: 1rem;
             box-sizing: border-box;
@@ -80,11 +95,100 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Game 1: Teka-Teki Binatang Styles */
+        /* --- HOME SCREEN SPECIFIC STYLES --- */
+        #home-view h1 {
+            /* Judul dengan gradien dan efek bayangan 3D */
+            background: linear-gradient(to right, var(--color-blue), var(--color-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(3px 3px 0px white) drop-shadow(0px 4px 6px var(--shadow-color));
+            line-height: 1.2;
+        }
+
+        .ribbon {
+            /* Pita ajakan */
+            position: relative;
+            background: var(--color-yellow);
+            color: #713f12;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 800;
+            box-shadow: 0 6px 0 #ca8a04, 0 8px 15px var(--shadow-color);
+            display: inline-block;
+        }
+        .ribbon::before, .ribbon::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            border-style: solid;
+        }
+        .ribbon::before {
+            left: 10px;
+            border-width: 10px 10px 0 0;
+            border-color: #ca8a04 transparent transparent transparent;
+        }
+        .ribbon::after {
+            right: 10px;
+            border-width: 10px 0 0 10px;
+            border-color: #ca8a04 transparent transparent transparent;
+        }
+
+        .menu-card { 
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Efek membal saat hover */
+            border-bottom-width: 8px; 
+            box-shadow: 0 10px 20px var(--shadow-color);
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 1 / 1; /* Membuat kartu menjadi persegi */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 10;
+        }
+        .menu-card::before {
+            /* Latar belakang ikon samar */
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 120%; height: 120%;
+            transform: translate(-50%, -50%) rotate(-10deg);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.05;
+            z-index: 0;
+            pointer-events: none;
+        }
+        /* Ikon latar belakang spesifik per kartu */
+        .menu-card.pink-card::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ec4899'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'/%3E%3C/svg%3E"); }
+        .menu-card.purple-card::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a855f7'%3E%3Cpath d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z'/%3E%3C/svg%3E"); }
+        .menu-card.green-card::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2322c55e'%3E%3Cpath d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z'/%3E%3C/svg%3E"); }
+
+        .menu-card:hover { transform: translateY(-10px) scale(1.05); box-shadow: 0 20px 30px var(--shadow-color); }
+        .menu-card:active { transform: translateY(4px) scale(0.98); border-bottom-width: 2px; box-shadow: 0 4px 8px var(--shadow-color); }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+            width: 100%;
+            max-width: 950px;
+            padding-bottom: 2rem;
+        }
+        @media (min-width: 640px) {
+            .menu-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        /* --- GAME STYLES (Teka-Teki Binatang) --- */
         .animal-piece {
             font-size: 3.5rem; cursor: grab; transition: transform 0.2s, filter 0.2s;
             user-select: none; touch-action: none; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
@@ -102,7 +206,7 @@
         .drop-zone.filled { border: 4px solid #4ade80; background-color: #dcfce7; }
         .drop-zone.incorrect { border: 4px solid #ef4444; background-color: #fee2e2; }
 
-        /* Game 2: Pola Cerdas Styles */
+        /* --- GAME STYLES (Pola Cerdas) --- */
         .pattern-box {
             font-size: clamp(2rem, 8vw, 3.5rem); 
             width: clamp(50px, 15vw, 80px); 
@@ -125,7 +229,7 @@
         .option-btn:hover { border-color: #60a5fa; background: #eff6ff; }
         .option-btn:active { transform: translateY(6px); box-shadow: 0 0px 0px #d1d5db; }
 
-        /* Game 3: Labirin Styles */
+        /* --- GAME STYLES (Labirin) --- */
         .maze-cell {
             width: 100%; aspect-ratio: 1/1;
             display: flex; align-items: center; justify-content: center;
@@ -182,36 +286,19 @@
             background: rgba(0,0,0,0.5); z-index: 90; backdrop-filter: blur(4px);
         }
 
-        .menu-card { transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-bottom-width: 8px; box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
-        .menu-card:hover { transform: translateY(-8px) scale(1.03); box-shadow: 0 15px 25px rgba(0,0,0,0.15); }
-        .menu-card:active { transform: translateY(5px) scale(0.98); border-bottom-width: 0px; box-shadow: 0 0px 0px rgba(0,0,0,0); }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-            width: 100%;
-            max-width: 900px;
-        }
-        @media (min-width: 640px) {
-            .menu-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 1.5rem;
-            }
-        }
-
         /* Global Controls (Audio & Fullscreen) */
         .global-controls {
             position: fixed; top: 1rem; right: 1rem; z-index: 100;
-            display: flex; gap: 0.5rem;
+            display: flex; gap: 0.75rem;
         }
         .global-btn {
-            background: white; border-radius: 0.5rem; width: 50px; height: 50px; /* Persegi */
+            background: white; border-radius: 50%; width: 50px; height: 50px;
             display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
-            box-shadow: 0 4px 0px #cbd5e1; cursor: pointer; border: 2px solid #e2e8f0;
-            color: #374151; /* Warna ikon SVG */
+            box-shadow: 0 4px 6px var(--shadow-color), 0 2px 0 #cbd5e1; cursor: pointer; border: 2px solid #e2e8f0;
+            color: #374151; transition: all 0.2s ease;
         }
-        .global-btn:active { transform: translateY(4px); box-shadow: 0 0px 0px #cbd5e1; }
+        .global-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 8px var(--shadow-color), 0 4px 0 #cbd5e1; }
+        .global-btn:active { transform: translateY(2px); box-shadow: 0 2px 4px var(--shadow-color), 0 0px 0 #cbd5e1; border-bottom-width: 0px; }
     </style>
 </head>
 <body>
@@ -228,41 +315,55 @@
     <div class="global-controls">
         <button id="fullscreen-toggle" class="global-btn" onclick="toggleFullscreen()" title="Layar Penuh">
             <!-- Ikon Buka Fullscreen -->
-            <svg id="icon-fs-enter" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            <svg id="icon-fs-enter" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
             <!-- Ikon Tutup Fullscreen -->
-            <svg id="icon-fs-exit" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
+            <svg id="icon-fs-exit" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
         </button>
         <button id="audio-toggle" class="global-btn" onclick="toggleAudio()" title="Suara">🔊</button>
     </div>
 
     <!-- HOME SCREEN -->
-    <div id="home-view" class="view-section active">
-        <div class="text-center mb-6 pop-in flex-shrink-0">
-            <div class="text-5xl md:text-6xl mb-2 animate-bounce drop-shadow-xl">🧠</div>
-            <h1 class="text-4xl md:text-5xl text-blue-600 drop-shadow-xl mb-2 title-font" style="text-shadow: 3px 3px 0px white, -2px -2px 0px white, 2px -2px 0px white, -2px 2px 0px white;">Pusat Logika Anak</h1>
-            <p class="text-gray-700 text-sm md:text-xl font-bold bg-white/90 border-2 border-blue-200 px-4 md:px-6 py-1 md:py-2 rounded-xl inline-block shadow-lg">Pilih permainan untuk mulai belajar!</p>
+    <div id="home-view" class="view-section active justify-start pt-12 md:pt-20">
+        <div class="text-center mb-8 pop-in flex-shrink-0 relative z-10">
+            <!-- Ilustrasi Judul yang Lebih Menarik -->
+            <div class="flex justify-center items-center mb-4">
+                <svg class="w-24 h-24 md:w-32 md:h-32 animate-bounce drop-shadow-xl" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" fill="#f0f9ff" stroke="#3b82f6" stroke-width="3"/>
+                    <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-size="60">🧠</text>
+                    <path d="M75,25 Q85,15 95,25 T95,45" fill="none" stroke="#a855f7" stroke-width="4" stroke-linecap="round"><animate attributeName="d" values="M75,25 Q85,15 95,25 T95,45;M75,28 Q85,18 95,28 T95,48;M75,25 Q85,15 95,25 T95,45" dur="2s" repeatCount="indefinite"/></path>
+                    <circle cx="20" cy="70" r="8" fill="#ec4899"/>
+                    <rect x="70" y="65" width="12" height="12" fill="#eab308" transform="rotate(15)"/>
+                </svg>
+            </div>
+            <h1 class="text-5xl md:text-7xl mb-4 title-font">Pusat Logika Anak</h1>
+            <div class="ribbon text-lg md:text-2xl title-font">Pilih permainan untuk mulai belajar!</div>
         </div>
 
-        <div class="menu-grid w-full px-2 flex-grow flex items-center justify-center overflow-y-auto pb-4">
+        <!-- Menambahkan gambar visual dari kartu game -->
+        <div class="w-full max-w-4xl px-4 mb-8 pop-in relative z-10">
+            
+        </div>
+
+        <div class="menu-grid w-full px-4 flex-grow overflow-y-auto pb-8">
             <!-- Game 1 Card -->
-            <div onclick="showGame('animal')" class="menu-card cursor-pointer bg-gradient-to-b from-white to-pink-50 p-4 md:p-6 rounded-xl border-pink-400 border-x-4 border-t-4 border-b-8 text-center pop-in h-full flex flex-col justify-center" style="animation-delay: 0.1s;">
-                <div class="text-5xl md:text-7xl mb-2 md:mb-4 drop-shadow-md transition-transform hover:scale-110">🧩🐱</div>
-                <h2 class="text-xl md:text-2xl text-pink-600 title-font mb-1 md:mb-2" style="text-shadow: 1px 1px 0px white;">Teka-Teki Binatang</h2>
-                <p class="text-gray-600 font-bold text-xs md:text-sm">Latih posisi & logika dengan memindahkan binatang lucumu!</p>
+            <div onclick="showGame('animal')" class="menu-card pink-card cursor-pointer bg-gradient-to-br from-pink-100 to-white p-6 md:p-8 rounded-2xl border-pink-400 border-x-4 border-t-4 pop-in" style="animation-delay: 0.1s;">
+                <div class="text-6xl md:text-8xl mb-4 drop-shadow-md transition-transform hover:scale-110">🧩🐱</div>
+                <h2 class="text-2xl md:text-3xl text-pink-600 title-font mb-2" style="text-shadow: 1px 1px 0px white;">Teka-Teki Binatang</h2>
+                <p class="text-gray-700 font-bold text-sm md:text-base">Latih posisi & logika dengan memindahkan binatang lucumu!</p>
             </div>
 
             <!-- Game 2 Card -->
-            <div onclick="showGame('pattern')" class="menu-card cursor-pointer bg-gradient-to-b from-white to-purple-50 p-4 md:p-6 rounded-xl border-purple-400 border-x-4 border-t-4 border-b-8 text-center pop-in h-full flex flex-col justify-center" style="animation-delay: 0.2s;">
-                <div class="text-5xl md:text-7xl mb-2 md:mb-4 drop-shadow-md transition-transform hover:scale-110">🍎🍌</div>
-                <h2 class="text-xl md:text-2xl text-purple-600 title-font mb-1 md:mb-2" style="text-shadow: 1px 1px 0px white;">Pola Cerdas</h2>
-                <p class="text-gray-600 font-bold text-xs md:text-sm">Tebak gambar selanjutnya. Latih pengenalan pola & IQ!</p>
+            <div onclick="showGame('pattern')" class="menu-card purple-card cursor-pointer bg-gradient-to-br from-purple-100 to-white p-6 md:p-8 rounded-2xl border-purple-400 border-x-4 border-t-4 pop-in" style="animation-delay: 0.2s;">
+                <div class="text-6xl md:text-8xl mb-4 drop-shadow-md transition-transform hover:scale-110">🍎🍌</div>
+                <h2 class="text-2xl md:text-3xl text-purple-600 title-font mb-2" style="text-shadow: 1px 1px 0px white;">Pola Cerdas</h2>
+                <p class="text-gray-700 font-bold text-sm md:text-base">Tebak gambar selanjutnya. Latih pengenalan pola & IQ!</p>
             </div>
 
             <!-- Game 3 Card (NEW) -->
-            <div onclick="showGame('maze')" class="menu-card cursor-pointer bg-gradient-to-b from-white to-green-50 p-4 md:p-6 rounded-xl border-green-400 border-x-4 border-t-4 border-b-8 text-center pop-in h-full flex flex-col justify-center" style="animation-delay: 0.3s;">
-                <div class="text-5xl md:text-7xl mb-2 md:mb-4 drop-shadow-md transition-transform hover:scale-110">🐢🏁</div>
-                <h2 class="text-xl md:text-2xl text-green-600 title-font mb-1 md:mb-2" style="text-shadow: 1px 1px 0px white;">Labirin Petualang</h2>
-                <p class="text-gray-600 font-bold text-xs md:text-sm">Cari jalan keluar di labirin yang semakin menantang!</p>
+            <div onclick="showGame('maze')" class="menu-card green-card cursor-pointer bg-gradient-to-br from-green-100 to-white p-6 md:p-8 rounded-2xl border-green-400 border-x-4 border-t-4 pop-in" style="animation-delay: 0.3s;">
+                <div class="text-6xl md:text-8xl mb-4 drop-shadow-md transition-transform hover:scale-110">🐢🏁</div>
+                <h2 class="text-2xl md:text-3xl text-green-600 title-font mb-2" style="text-shadow: 1px 1px 0px white;">Labirin Petualang</h2>
+                <p class="text-gray-700 font-bold text-sm md:text-base">Cari jalan keluar di labirin yang semakin menantang!</p>
             </div>
         </div>
     </div>
