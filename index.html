@@ -12,14 +12,19 @@
             font-family: 'Nunito', sans-serif;
             background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
             min-height: 100vh;
+            min-height: -webkit-fill-available; /* Fix for Safari mobile */
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start; /* Ubah ke flex-start agar konten mulai dari atas */
             overflow-x: hidden;
             touch-action: manipulation;
             margin: 0;
-            padding: 1rem;
+            padding: 0; /* Hapus padding body, gunakan padding di dalam kontainer */
+        }
+
+        html {
+            height: -webkit-fill-available;
         }
 
         h1, h2, h3, .title-font {
@@ -59,10 +64,15 @@
         .view-section {
             display: none;
             width: 100%;
-            max-width: 700px;
+            height: 100vh; /* Setinggi layar */
+            height: 100dvh; /* Dynamic viewport height untuk mobile */
+            max-width: 800px; /* Sedikit dilebarkan untuk desktop */
             flex-direction: column;
             align-items: center;
+            justify-content: center; /* Konten di tengah secara vertikal */
             z-index: 10;
+            padding: 1rem;
+            box-sizing: border-box;
         }
         .view-section.active {
             display: flex;
@@ -82,7 +92,9 @@
         .animal-piece:active { cursor: grabbing; transform: scale(1.15); }
         .animal-piece.dragging { opacity: 0.5; z-index: 50; }
         .drop-zone {
-            width: 85px; height: 85px; border: 4px dashed #cbd5e1; border-radius: 1.2rem;
+            width: clamp(60px, 15vw, 85px); 
+            height: clamp(60px, 15vw, 85px); 
+            border: 4px dashed #cbd5e1; border-radius: 0.5rem; /* Persegi */
             display: flex; align-items: center; justify-content: center;
             background-color: rgba(255, 255, 255, 0.7); transition: all 0.3s ease;
         }
@@ -92,16 +104,21 @@
 
         /* Game 2: Pola Cerdas Styles */
         .pattern-box {
-            font-size: 3.5rem; width: 80px; height: 80px; display: flex; align-items: center;
-            justify-content: center; background: white; border-radius: 1rem;
+            font-size: clamp(2rem, 8vw, 3.5rem); 
+            width: clamp(50px, 15vw, 80px); 
+            height: clamp(50px, 15vw, 80px); 
+            display: flex; align-items: center;
+            justify-content: center; background: white; border-radius: 0.5rem; /* Persegi */
             box-shadow: 0 6px 0px #d1d5db; border: 3px solid #e5e7eb;
         }
         .pattern-missing {
             border: 4px dashed #f59e0b; background: #fef3c7; color: #d97706;
-            font-weight: bold; font-size: 2.5rem; box-shadow: 0 6px 0px #fcd34d;
+            font-weight: bold; font-size: clamp(1.5rem, 6vw, 2.5rem); box-shadow: 0 6px 0px #fcd34d;
         }
         .option-btn {
-            font-size: 3.5rem; padding: 1rem; background: white; border-radius: 1.5rem;
+            font-size: clamp(2.5rem, 10vw, 3.5rem); 
+            padding: clamp(0.5rem, 2vw, 1rem); 
+            background: white; border-radius: 0.5rem; /* Persegi */
             border: 4px solid #e5e7eb; cursor: pointer; transition: all 0.1s;
             box-shadow: 0 6px 0px #d1d5db;
         }
@@ -112,14 +129,16 @@
         .maze-cell {
             width: 100%; aspect-ratio: 1/1;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; border-radius: 4px;
+            font-size: clamp(1rem, 5vw, 2rem); 
+            border-radius: 4px;
         }
-        @media (min-width: 640px) { .maze-cell { font-size: 2rem; } }
         .wall { background-color: #16a34a; box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2); }
         .path { background-color: #dcfce7; }
         .dpad-btn {
-            width: 60px; height: 60px; font-size: 2rem;
-            background: white; border-radius: 1rem; border: 4px solid #cbd5e1;
+            width: clamp(50px, 12vw, 65px); 
+            height: clamp(50px, 12vw, 65px); 
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            background: white; border-radius: 0.5rem; border: 4px solid #cbd5e1; /* Persegi */
             box-shadow: 0 6px 0px #94a3b8; display: flex; align-items: center; justify-content: center;
             user-select: none; touch-action: manipulation;
         }
@@ -133,7 +152,7 @@
         
         #message-box {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: white; padding: 2.5rem; border-radius: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            background: white; padding: 2.5rem; border-radius: 1rem; box-shadow: 0 20px 40px rgba(0,0,0,0.3); /* Persegi */
             z-index: 100; text-align: center; flex-direction: column; align-items: center; gap: 1rem;
             border: 8px solid #fbcfe8; width: 90%; max-width: 400px;
         }
@@ -146,10 +165,24 @@
         .menu-card:hover { transform: translateY(-5px) scale(1.02); }
         .menu-card:active { transform: translateY(5px) scale(0.98); border-bottom-width: 0px; }
 
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            width: 100%;
+            max-width: 900px;
+        }
+        @media (min-width: 640px) {
+            .menu-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+            }
+        }
+
         /* Audio Toggle */
         #audio-toggle {
             position: fixed; top: 1rem; right: 1rem; z-index: 100;
-            background: white; border-radius: 50%; width: 50px; height: 50px;
+            background: white; border-radius: 0.5rem; width: 50px; height: 50px; /* Persegi */
             display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
             box-shadow: 0 4px 0px #cbd5e1; cursor: pointer; border: 2px solid #e2e8f0;
         }
@@ -171,113 +204,120 @@
 
     <!-- HOME SCREEN -->
     <div id="home-view" class="view-section active">
-        <div class="text-center mb-8 pop-in">
-            <div class="text-6xl mb-4 animate-bounce">🚀</div>
-            <h1 class="text-5xl text-blue-600 drop-shadow-lg mb-3 title-font" style="text-shadow: 2px 2px 0px white, -2px -2px 0px white, 2px -2px 0px white, -2px 2px 0px white;">Pusat Logika Anak</h1>
-            <p class="text-gray-700 text-xl font-bold bg-white/80 border-2 border-blue-200 px-6 py-2 rounded-full inline-block shadow-md">Pilih permainan untuk mulai belajar!</p>
+        <div class="text-center mb-6 pop-in flex-shrink-0">
+            <div class="text-5xl md:text-6xl mb-2 animate-bounce">🧠</div>
+            <h1 class="text-4xl md:text-5xl text-blue-600 drop-shadow-lg mb-2 title-font" style="text-shadow: 2px 2px 0px white, -2px -2px 0px white, 2px -2px 0px white, -2px 2px 0px white;">Pusat Logika Anak</h1>
+            <p class="text-gray-700 text-sm md:text-xl font-bold bg-white/80 border-2 border-blue-200 px-4 md:px-6 py-1 md:py-2 rounded-xl inline-block shadow-md">Pilih permainan untuk mulai belajar!</p>
         </div>
 
-        <div class="flex flex-col md:flex-row flex-wrap justify-center gap-6 w-full px-4">
+        <div class="menu-grid w-full px-2 flex-grow flex items-center justify-center overflow-y-auto pb-4">
             <!-- Game 1 Card -->
-            <div onclick="showGame('animal')" class="menu-card cursor-pointer bg-white p-6 rounded-3xl border-pink-400 border-x-4 border-t-4 border-b-8 flex-1 min-w-[250px] text-center pop-in" style="animation-delay: 0.1s;">
-                <div class="text-7xl mb-4">🧩🐱</div>
-                <h2 class="text-2xl text-pink-600 title-font mb-2">Teka-Teki Binatang</h2>
-                <p class="text-gray-600 font-bold">Latih posisi & logika dengan memindahkan binatang lucumu!</p>
+            <div onclick="showGame('animal')" class="menu-card cursor-pointer bg-white p-4 md:p-6 rounded-xl border-pink-400 border-x-4 border-t-4 border-b-8 text-center pop-in h-full flex flex-col justify-center" style="animation-delay: 0.1s;">
+                <div class="text-5xl md:text-7xl mb-2 md:mb-4">🧩🐱</div>
+                <h2 class="text-xl md:text-2xl text-pink-600 title-font mb-1 md:mb-2">Teka-Teki Binatang</h2>
+                <p class="text-gray-600 font-bold text-xs md:text-sm">Latih posisi & logika dengan memindahkan binatang lucumu!</p>
             </div>
 
             <!-- Game 2 Card -->
-            <div onclick="showGame('pattern')" class="menu-card cursor-pointer bg-white p-6 rounded-3xl border-purple-400 border-x-4 border-t-4 border-b-8 flex-1 min-w-[250px] text-center pop-in" style="animation-delay: 0.2s;">
-                <div class="text-7xl mb-4">🍎🍌</div>
-                <h2 class="text-2xl text-purple-600 title-font mb-2">Pola Cerdas</h2>
-                <p class="text-gray-600 font-bold">Tebak gambar selanjutnya. Latih pengenalan pola & IQ!</p>
+            <div onclick="showGame('pattern')" class="menu-card cursor-pointer bg-white p-4 md:p-6 rounded-xl border-purple-400 border-x-4 border-t-4 border-b-8 text-center pop-in h-full flex flex-col justify-center" style="animation-delay: 0.2s;">
+                <div class="text-5xl md:text-7xl mb-2 md:mb-4">🍎🍌</div>
+                <h2 class="text-xl md:text-2xl text-purple-600 title-font mb-1 md:mb-2">Pola Cerdas</h2>
+                <p class="text-gray-600 font-bold text-xs md:text-sm">Tebak gambar selanjutnya. Latih pengenalan pola & IQ!</p>
             </div>
 
             <!-- Game 3 Card (NEW) -->
-            <div onclick="showGame('maze')" class="menu-card cursor-pointer bg-white p-6 rounded-3xl border-green-400 border-x-4 border-t-4 border-b-8 flex-1 min-w-[250px] text-center pop-in" style="animation-delay: 0.3s;">
-                <div class="text-7xl mb-4">🐢🏁</div>
-                <h2 class="text-2xl text-green-600 title-font mb-2">Labirin Petualang</h2>
-                <p class="text-gray-600 font-bold">Cari jalan keluar di labirin yang semakin menantang!</p>
+            <div onclick="showGame('maze')" class="menu-card cursor-pointer bg-white p-4 md:p-6 rounded-xl border-green-400 border-x-4 border-t-4 border-b-8 text-center pop-in h-full flex flex-col justify-center" style="animation-delay: 0.3s;">
+                <div class="text-5xl md:text-7xl mb-2 md:mb-4">🐢🏁</div>
+                <h2 class="text-xl md:text-2xl text-green-600 title-font mb-1 md:mb-2">Labirin Petualang</h2>
+                <p class="text-gray-600 font-bold text-xs md:text-sm">Cari jalan keluar di labirin yang semakin menantang!</p>
             </div>
         </div>
     </div>
 
     <!-- GAME 1: TEKA-TEKI BINATANG -->
     <div id="animal-view" class="view-section">
-        <div class="w-full flex justify-between items-center mb-4 px-2">
-            <button onclick="showHome()" class="btn-3d bg-white text-gray-800 font-bold py-2 px-4 rounded-full border-2 border-gray-200 border-b-4 title-font">⬅️ Menu</button>
-            <div class="bg-white px-4 py-2 rounded-full shadow-sm border-2 border-blue-200 font-bold text-blue-600 title-font text-lg">Level <span id="animal-level-display">1</span></div>
+        <div class="w-full flex justify-between items-center mb-2 px-2 flex-shrink-0">
+            <button onclick="showHome()" class="btn-3d bg-white text-gray-800 font-bold py-1 md:py-2 px-3 md:px-4 rounded-xl border-2 border-gray-200 border-b-4 title-font text-sm md:text-base">⬅️ Menu</button>
+            <div class="bg-white px-3 md:px-4 py-1 md:py-2 rounded-xl shadow-sm border-2 border-blue-200 font-bold text-blue-600 title-font text-sm md:text-lg">Level <span id="animal-level-display">1</span></div>
         </div>
 
-        <h1 class="text-4xl text-pink-600 drop-shadow-md mb-2 title-font text-center" style="text-shadow: 2px 2px 0px white;">Teka-Teki Binatang</h1>
-        <div class="flex flex-wrap gap-1 justify-center mt-1 mb-4" id="animal-stars"></div>
+        <h1 class="text-2xl md:text-4xl text-pink-600 drop-shadow-md mb-1 title-font text-center flex-shrink-0" style="text-shadow: 2px 2px 0px white;">Teka-Teki Binatang</h1>
+        <div class="flex flex-wrap gap-1 justify-center mt-1 mb-2 flex-shrink-0" id="animal-stars"></div>
 
-        <!-- Hint Section -->
-        <div class="bg-yellow-100 border-4 border-yellow-400 p-5 rounded-2xl shadow-lg w-full mb-6 relative">
-            <div class="absolute -top-4 -left-4 bg-yellow-400 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-3xl border-2 border-white animate-bounce">💡</div>
-            <h2 class="text-xl text-center text-gray-800 mb-2 title-font">Petunjuk:</h2>
-            <p id="hint-text" class="text-center text-xl font-bold text-blue-800 leading-relaxed"></p>
+        <div class="flex-grow w-full flex flex-col justify-center overflow-y-auto pb-4 gap-3 md:gap-4">
+            <!-- Hint Section -->
+            <div class="bg-yellow-100 border-4 border-yellow-400 p-3 md:p-5 rounded-xl shadow-lg w-full relative">
+                <div class="absolute -top-3 -left-3 md:-top-4 md:-left-4 bg-yellow-400 w-8 h-8 md:w-12 md:h-12 rounded-xl flex items-center justify-center shadow-md text-xl md:text-3xl border-2 border-white animate-bounce">💡</div>
+                <h2 class="text-lg md:text-xl text-center text-gray-800 mb-1 title-font">Petunjuk:</h2>
+                <p id="hint-text" class="text-center text-base md:text-xl font-bold text-blue-800 leading-tight md:leading-relaxed"></p>
+            </div>
+
+            <div class="bg-blue-50/90 p-4 md:p-6 rounded-xl shadow-inner w-full border-4 border-blue-200 flex-shrink-0">
+                <div id="drop-container" class="flex flex-wrap justify-center gap-3 md:gap-6 min-h-[70px] md:min-h-[100px]"></div>
+            </div>
+
+            <div class="bg-pink-50 p-4 md:p-6 rounded-xl shadow-md w-full border-4 border-pink-300 flex-shrink-0">
+                <h3 class="text-center text-gray-600 mb-2 md:mb-4 font-bold title-font text-sm md:text-lg">Geser binatang ke kotak di atas:</h3>
+                <div id="pieces-container" class="flex flex-wrap justify-center gap-3 md:gap-4 min-h-[60px] md:min-h-[80px]"></div>
+            </div>
         </div>
 
-        <div class="bg-blue-50/90 p-6 rounded-3xl shadow-inner w-full mb-6 border-4 border-blue-200">
-            <div id="drop-container" class="flex flex-wrap justify-center gap-4 md:gap-6 min-h-[100px]"></div>
-        </div>
-
-        <div class="bg-pink-50 p-6 rounded-3xl shadow-md w-full border-4 border-pink-300">
-            <h3 class="text-center text-gray-600 mb-4 font-bold title-font text-lg">Geser binatang ke kotak di atas:</h3>
-            <div id="pieces-container" class="flex flex-wrap justify-center gap-4 min-h-[80px]"></div>
-        </div>
-
-        <div class="mt-6 flex gap-4">
-            <button id="check-btn" class="hidden btn-3d bg-green-500 border-green-700 text-white title-font py-3 px-8 rounded-full text-xl border-x-2 border-t-2">Periksa! ✔️</button>
-            <button id="reset-btn" class="btn-3d bg-gray-400 border-gray-600 text-white title-font py-3 px-6 rounded-full border-x-2 border-t-2">Ulangi 🔄</button>
+        <div class="mt-2 md:mt-4 flex gap-4 flex-shrink-0 pb-2">
+            <button id="check-btn" class="hidden btn-3d bg-green-500 border-green-700 text-white title-font py-2 md:py-3 px-6 md:px-8 rounded-xl text-lg md:text-xl border-x-2 border-t-2">Periksa! ✔️</button>
+            <button id="reset-btn" class="btn-3d bg-gray-400 border-gray-600 text-white title-font py-2 md:py-3 px-4 md:px-6 rounded-xl border-x-2 border-t-2">Ulangi 🔄</button>
         </div>
     </div>
 
     <!-- GAME 2: POLA CERDAS -->
     <div id="pattern-view" class="view-section">
-        <div class="w-full flex justify-between items-center mb-4 px-2">
-            <button onclick="showHome()" class="btn-3d bg-white text-gray-800 font-bold py-2 px-4 rounded-full border-2 border-gray-200 border-b-4 title-font">⬅️ Menu</button>
-            <div class="bg-white px-4 py-2 rounded-full shadow-sm border-2 border-purple-200 font-bold text-purple-600 title-font text-lg">Level <span id="pattern-level-display">1</span></div>
+        <div class="w-full flex justify-between items-center mb-2 px-2 flex-shrink-0">
+            <button onclick="showHome()" class="btn-3d bg-white text-gray-800 font-bold py-1 md:py-2 px-3 md:px-4 rounded-xl border-2 border-gray-200 border-b-4 title-font text-sm md:text-base">⬅️ Menu</button>
+            <div class="bg-white px-3 md:px-4 py-1 md:py-2 rounded-xl shadow-sm border-2 border-purple-200 font-bold text-purple-600 title-font text-sm md:text-lg">Level <span id="pattern-level-display">1</span></div>
         </div>
 
-        <h1 class="text-4xl text-purple-600 drop-shadow-md mb-2 title-font text-center" style="text-shadow: 2px 2px 0px white;">Pola Cerdas</h1>
-        <div class="flex flex-wrap gap-1 justify-center mt-1 mb-6" id="pattern-stars"></div>
+        <h1 class="text-2xl md:text-4xl text-purple-600 drop-shadow-md mb-1 title-font text-center flex-shrink-0" style="text-shadow: 2px 2px 0px white;">Pola Cerdas</h1>
+        <div class="flex flex-wrap gap-1 justify-center mt-1 mb-4 md:mb-6 flex-shrink-0" id="pattern-stars"></div>
 
-        <div class="bg-white p-6 rounded-3xl shadow-lg w-full border-4 border-purple-300 mb-8 flex flex-col items-center">
-            <h2 class="text-2xl text-gray-700 mb-6 title-font text-center">Gambar apa yang selanjutnya?</h2>
-            <div id="pattern-sequence" class="flex flex-wrap justify-center gap-3 md:gap-4 mb-4"></div>
+        <div class="flex-grow w-full flex flex-col justify-center items-center overflow-y-auto pb-4">
+            <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg w-full border-4 border-purple-300 mb-6 md:mb-8 flex flex-col items-center">
+                <h2 class="text-xl md:text-2xl text-gray-700 mb-4 md:mb-6 title-font text-center">Gambar apa yang selanjutnya?</h2>
+                <div id="pattern-sequence" class="flex flex-wrap justify-center gap-2 md:gap-4 mb-2 md:mb-4"></div>
+            </div>
+
+            <h3 class="text-lg md:text-xl text-gray-800 bg-white/80 px-4 py-1 rounded-xl mb-3 md:mb-4 font-bold title-font border-2 border-gray-200">Pilih Jawabanmu:</h3>
+            <div id="pattern-options" class="flex flex-wrap justify-center gap-4 md:gap-6"></div>
         </div>
-
-        <h3 class="text-xl text-gray-800 bg-white/80 px-4 py-1 rounded-full mb-4 font-bold title-font border-2 border-gray-200">Pilih Jawabanmu:</h3>
-        <div id="pattern-options" class="flex flex-wrap justify-center gap-6"></div>
     </div>
 
     <!-- GAME 3: LABIRIN PETUALANG -->
     <div id="maze-view" class="view-section">
-        <div class="w-full flex justify-between items-center mb-4 px-2">
-            <button onclick="showHome()" class="btn-3d bg-white text-gray-800 font-bold py-2 px-4 rounded-full border-2 border-gray-200 border-b-4 title-font">⬅️ Menu</button>
-            <div class="bg-white px-4 py-2 rounded-full shadow-sm border-2 border-green-200 font-bold text-green-600 title-font text-lg">Level <span id="maze-level-display">1</span></div>
+        <div class="w-full flex justify-between items-center mb-2 px-2 flex-shrink-0">
+            <button onclick="showHome()" class="btn-3d bg-white text-gray-800 font-bold py-1 md:py-2 px-3 md:px-4 rounded-xl border-2 border-gray-200 border-b-4 title-font text-sm md:text-base">⬅️ Menu</button>
+            <div class="bg-white px-3 md:px-4 py-1 md:py-2 rounded-xl shadow-sm border-2 border-green-200 font-bold text-green-600 title-font text-sm md:text-lg">Level <span id="maze-level-display">1</span></div>
         </div>
 
-        <h1 class="text-4xl text-green-600 drop-shadow-md mb-2 title-font text-center" style="text-shadow: 2px 2px 0px white;">Labirin Petualang</h1>
-        <div class="flex flex-wrap gap-1 justify-center mt-1 mb-4" id="maze-stars"></div>
+        <h1 class="text-2xl md:text-4xl text-green-600 drop-shadow-md mb-1 title-font text-center flex-shrink-0" style="text-shadow: 2px 2px 0px white;">Labirin Petualang</h1>
+        <div class="flex flex-wrap gap-1 justify-center mt-1 mb-2 md:mb-4 flex-shrink-0" id="maze-stars"></div>
 
-        <div class="bg-white p-4 rounded-3xl shadow-lg w-full border-4 border-green-300 mb-6 flex justify-center overflow-hidden">
-            <div id="maze-grid" class="grid gap-0 border-4 border-green-800 bg-green-800 rounded-md max-w-full" style="width: 320px;">
-                <!-- Maze Cells Injected Here -->
+        <div class="flex-grow w-full flex flex-col justify-center items-center overflow-y-auto pb-4">
+            <div class="bg-white p-2 md:p-4 rounded-xl shadow-lg w-full border-4 border-green-300 mb-4 md:mb-6 flex justify-center overflow-hidden">
+                <!-- Gunakan vw (viewport width) untuk memastikan labirin pas di layar -->
+                <div id="maze-grid" class="grid gap-0 border-4 border-green-800 bg-green-800 rounded-md" style="width: min(80vw, 350px);">
+                    <!-- Maze Cells Injected Here -->
+                </div>
             </div>
-        </div>
 
-        <!-- On Screen Controls for Touch/Mobile -->
-        <div class="grid grid-cols-3 gap-2 mt-2 mb-8">
-            <div></div>
-            <button class="dpad-btn" onclick="movePlayer(-1, 0)">⬆️</button>
-            <div></div>
-            <button class="dpad-btn" onclick="movePlayer(0, -1)">⬅️</button>
-            <button class="dpad-btn" onclick="movePlayer(1, 0)">⬇️</button>
-            <button class="dpad-btn" onclick="movePlayer(0, 1)">➡️</button>
+            <!-- On Screen Controls for Touch/Mobile -->
+            <div class="grid grid-cols-3 gap-2 mt-1 md:mt-2 mb-4 md:mb-8 flex-shrink-0">
+                <div></div>
+                <button class="dpad-btn" onclick="movePlayer(-1, 0)">⬆️</button>
+                <div></div>
+                <button class="dpad-btn" onclick="movePlayer(0, -1)">⬅️</button>
+                <button class="dpad-btn" onclick="movePlayer(1, 0)">⬇️</button>
+                <button class="dpad-btn" onclick="movePlayer(0, 1)">➡️</button>
+            </div>
+            <p class="text-gray-700 font-bold text-center bg-white/80 px-4 py-1 rounded-xl shadow-sm text-xs md:text-base flex-shrink-0 hidden md:block">Bisa juga pakai tombol panah di Keyboard (💻)</p>
         </div>
-        <p class="text-gray-700 font-bold text-center bg-white/80 px-4 py-1 rounded-full shadow-sm">Bisa juga pakai tombol panah di Keyboard (💻)</p>
     </div>
 
     <!-- Message Box / Modal -->
@@ -286,7 +326,7 @@
         <div id="msg-icon" class="text-7xl mb-2 pop-in">🎉</div>
         <h2 id="msg-title" class="text-3xl text-pink-600 title-font mb-2">Kerja Bagus!</h2>
         <p id="msg-text" class="text-gray-700 text-xl font-bold mb-4">Kamu berhasil menyelesaikannya.</p>
-        <button id="msg-btn" class="btn-3d bg-blue-500 border-blue-700 text-white title-font py-3 px-8 rounded-full text-xl w-full border-x-2 border-t-2">Lanjut</button>
+        <button id="msg-btn" class="btn-3d bg-blue-500 border-blue-700 text-white title-font py-3 px-8 rounded-xl text-xl w-full border-x-2 border-t-2">Lanjut</button>
     </div>
 
     <script>
@@ -757,7 +797,8 @@
             const level = mazeData[mazeCurrentLevel];
             const grid = level.grid;
             
-            container.style.gridTemplateColumns = `repeat(${grid[0].length}, 1fr)`;
+            const cols = grid[0].length;
+            container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
             container.innerHTML = '';
             
             for(let r=0; r<grid.length; r++) {
